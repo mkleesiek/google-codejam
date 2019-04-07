@@ -8,6 +8,8 @@ project('codejam', 'cpp',
 
 project_description = 'My Google CodeJam Playground'
 
+gtest_dep   = dependency('gtest', main : true, required : false)
+
 inc = include_directories('include')
 
 subdir('2019')
