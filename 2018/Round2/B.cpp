@@ -1,10 +1,44 @@
 #include <fstream>
 #include <iostream>
 #include <vector>
-#include <unordered_map>
-#include <set>
 
 using namespace std;
+
+int solve(int R, int B)
+{
+    int N = 0;
+
+    const int C = R+B;
+
+    for (int c = 1; c <= C; ++c)
+    {
+        for (int r = c/2+1; r <= c; ++r) {
+            int b = c - r;
+            if (r > R || b > B)
+                continue;
+
+            R -= r;
+            B -= b;
+            N++;
+        }
+
+        for (int r = c/2; r >= 0; --r) {
+            int b = c - r;
+            if (r > R || b > B)
+                continue;
+
+            R -= r;
+            B -= b;
+            N++;
+        }
+
+
+        if (R+B < c)
+            break;
+    }
+
+    return N;
+}
 
 int main(int argc, char* argv[])
 {
@@ -23,56 +57,10 @@ int main(int argc, char* argv[])
 
     for (int t = 0; t < T; ++t)
     {
-        int S;
-        cin >> S;
+        int R, B;
+        cin >> R >> B;
 
-        vector<int> D(S), A(S), B(S);
-        for (int s = 0; s < S; ++s) {
-            cin >> D[s] >> A[s] >> B[s];
-        }
-
-        unordered_map<int, set<int>> valid_M, valid_N;
-
-        for (int s = 0; s < S; ++s) {
-            int M = D[s] + A[s];
-            int N = D[s] - B[s];
-            valid_M[M].insert(s);
-            valid_N[N].insert(s);
-        }
-
-
-        int longest_range = 0;
-        set<int> ranges;
-
-        for (auto vM : valid_M) {
-            for (auto vN : valid_N) {
-                set<int> signs = vM.second;
-                signs.insert(vN.second.begin(), vN.second.end());
-                int n = 0;
-                int last_s = -1;
-                for (int s : signs) {
-                    if (last_s == -1 || s - last_s > 1) {
-                        n = 1;
-                        last_s = s;
-                    }
-                    else {
-                        ++n;
-                        last_s = s;
-                    }
-                    if (longest_range < n) {
-                        longest_range = n;
-                        ranges.clear();
-                        ranges.insert(s);
-                    }
-                    else if (longest_range == n) {
-                        ranges.insert(s);
-                    }
-                }
-            }
-        }
-
-
-        cout << "Case #" << (t+1) << ": " << longest_range << ", " << ranges.size() << endl;
+        cout << "Case #" << (t+1) << ": " << solve(R, B) << endl;
     }
 
     return 0;

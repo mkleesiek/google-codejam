@@ -4,28 +4,22 @@
 
 using namespace std;
 
-bool shift(vector<int>& G, const vector<pair<int,int>>& R, int m = 0, int c = 0)
+int count(const vector<vector<int>>& A, int row, int col, int val)
 {
-    if (R[m].first == 0 || R[m].second == 0)
-        return false;
+    int result = 0;
 
-    int M = G.size();
-
-    if (c > M)
-        return false;
-
-    if ((R[m].first != R[m].second && G[R[m].first] > 0 && G[R[m].second] > 0) || (R[m].first == R[m].second && G[R[m].first] > 1))
-    {
-        G[m]++;
-        G[R[m].first]--;
-        G[R[m].second]--;
-        return true;
+    if (row < 0) {
+        for (int i = 0; i < A.size(); ++i)
+            if (A[i][col] == val)
+                result++;
+    }
+    else {
+        for (int j = 0; j < A.size(); ++j)
+            if (A[row][j] == val)
+                result++;
     }
 
-    if (G[R[m].first] < G[R[m].second])
-        return shift(G, R, R[m].first, c+1);
-    else
-        return shift(G, R, R[m].second, c+1);
+    return result;
 }
 
 int main(int argc, char* argv[])
@@ -45,27 +39,67 @@ int main(int argc, char* argv[])
 
     for (int t = 0; t < T; ++t)
     {
-        int M;
-        cin >> M;
 
-        vector<int> G(M, 0);
-        vector<pair<int, int>> R(M, {0, 0 });
+        int N;
+        cin >> N;
 
-        for (int m = 0; m < M; ++m) {
-            cin >> R[m].first >> R[m].second;
-            R[m].first--;
-            R[m].second--;
+        vector<vector<int>> A(N, vector<int>(N));
+        for (int i = 0; i < N; ++i)
+            for (int j = 0; j < N; ++j)
+                cin >> A[i][j];
+
+
+        vector<vector<pair<int, int>>> counts(N, vector<pair<int,int>>(N, {0, 0}));
+        for (int i = 0; i < N; ++i) {
+            for (int j = 0; j < N; ++j) {
+
+                counts[i][j] = { count(A, i, -1, A[i][j]), count(A, -1, j, A[i][j]) };
+            }
         }
 
-        for (int m = 0; m < M; ++m) {
-            cin >> G[m];
+        int C = 0;
+
+        while (true)
+        {
+            int maxCount = 1;
+            pair<int, int> maxIndices = {-1, -1};
+
+            for (int i = 0; i < N; ++i) {
+                for (int j = 0; j < N; ++j) {
+
+                    int mc = counts[i][j].first + counts[i][j].second;
+                    if (mc > maxCount) {
+                        maxCount = mc;
+                        maxIndices = {i, j};
+                    }
+                }
+            }
+
+            if (maxCount <= 2)
+                break;
+
+            for (int a = -N; a < N+1; ++a) {
+                if (a == 0)
+                    continue;
+
+                if (count(A, maxIndices.first, -1, a) == 0 && count(A, -1, maxIndices.second, a) == 0) {
+                    A[maxIndices.first][maxIndices.second] = a;
+
+                    for (int i = 0; i < N; ++i)
+                        counts[i][maxIndices.second].second = count(A, -1, maxIndices.second, A[i][maxIndices.second]);
+
+                    for (int j = 0; j < N; ++j)
+                        counts[maxIndices.first][j].first = count(A, maxIndices.first, -1, A[maxIndices.first][j]);
+
+
+                    C++;
+                    break;
+                }
+            }
         }
 
 
-        while (shift(G, R)) { };
-
-
-        cout << "Case #" << (t+1) << ": " << G[0] << endl;
+        cout << "Case #" << (t+1) << ": " << C << endl;
     }
 
     return 0;
