@@ -1,5 +1,4 @@
 #include <iostream>
-#include <fstream>
 #include <string>
 #include <vector>
 #include <set>
@@ -38,25 +37,11 @@ string solve(const vector<T>& C)
 }
 
 #ifndef GTEST
-
-int main(int argc, char* argv[])
-{
-    ifstream in;
-    if (argc == 2)
-    {
-        const string inFile = argv[1];
-        in =  ifstream(inFile);
-        cin.rdbuf(in.rdbuf());
-    }
-
+int main(int /*argc*/, char* /*argv*/[])
 #else
-
-int test(const string& arg)
-{
-    istringstream in(arg);
-    cin.rdbuf(in.rdbuf());
-
+int test()
 #endif // GTEST
+{
 
     int T = 0;
     cin >> T;
