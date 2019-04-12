@@ -8,18 +8,29 @@
 using namespace std;
 
 template<typename T>
-string solve(const vector<T>& C)
-{
-    T D = __gcd(C[0], C[1]);
-    vector<T> P(C.size()+1, 0);
-    P[0] = C[0] / D;
-    P[1] = D;
-    
-    for (size_t j = 2; j < P.size(); j++)
+string decrypt(const vector<T>& C)
+{  
+    size_t k = 0;
+    T D = 0;
+    for (; k < C.size()-1; k++)
     {
-        P[j] = C[j-1] / P[j-1];
+        if (C[k] == C[k+1])
+            continue;
+
+        D = __gcd(C[k], C[k+1]);
+        break;
     }
 
+    vector<T> P(C.size()+1, 0);
+
+    P[k+1] = D;
+
+    for (size_t j = k+1; j-- > 0;)
+        P[j] = C[j] / P[j+1];
+
+    for (size_t j = k+2; j < P.size(); j++)
+        P[j] = C[j-1] / P[j-1];
+    
     set<T> primes(P.begin(), P.end());
     unordered_map<T, char> pmap;
 
@@ -36,11 +47,7 @@ string solve(const vector<T>& C)
     return result;
 }
 
-#ifndef GTEST
-int main(int /*argc*/, char* /*argv*/[])
-#else
-int test()
-#endif // GTEST
+int main()
 {
 
     int T = 0;
@@ -59,7 +66,7 @@ int test()
 
         cout << "Case #" << (t+1) << ": ";
 
-        string solution = solve(C);
+        string solution = decrypt(C);
 
         cout << solution << endl;
     }

@@ -4,6 +4,9 @@
 
 #define GTEST
 
+#define main(...) test(__VA_ARGS__)
+//undef main
+
 #define PROVIDE_INPUT(input) \
     std::istringstream in(input); \
     cin.rdbuf(in.rdbuf()); \
