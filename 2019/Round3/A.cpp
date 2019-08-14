@@ -5,89 +5,97 @@
 
 using namespace std;
 
-static mt19937 gen;
+static auto gen = mt19937_64(random_device()());
 
 class Zillionim
 {
 public:
-    Zillionim(uint64_t total = 1'000'000'000'000ull, uint64_t perMove = 10'000'000'000ull) :
-        totalCoins(total),
-        coinsPerMove(perMove)
+    Zillionim(uint64_t total = 1'000'000'000'000, uint64_t per_move = 10'000'000'000) :
+            m_coins_total(total),
+            m_coins_per_move(per_move)
     {
-        playableIntervals.emplace(1, totalCoins);
+        m_playable_intervals.emplace(1, m_coins_total - m_coins_per_move + 1);
     }
 
-    bool turn(uint64_t index)
+    bool Turn(uint64_t index)
     {
-        if (playableIntervals.empty())
+        if (m_playable_intervals.empty())
             return false;
 
-        auto it = playableIntervals.upper_bound(index);
+        auto it = m_playable_intervals.upper_bound(index);
         it--;
 
-        if (it == playableIntervals.end() || index < it->first || index + coinsPerMove - 1 > it->second)
+        if (it == m_playable_intervals.end() || index < it->first || index > it->second)
             return false;
 
         auto ci = *it;
 
-        playableIntervals.erase(it);
+        m_playable_intervals.erase(it);
 
-        if (ci.first + coinsPerMove <= index)
-            playableIntervals.emplace(ci.first, index - 1);
+        if (ci.first + m_coins_per_move - 1 < index)
+            m_playable_intervals.emplace(ci.first, index - m_coins_per_move);
 
-        if (index + coinsPerMove - 1 <= ci.second - coinsPerMove)
-            playableIntervals.emplace(index + coinsPerMove, ci.second);
+        if (index + m_coins_per_move - 1 < ci.second)
+            m_playable_intervals.emplace(index + m_coins_per_move, ci.second);
 
-        executedTurns++;
+        m_cnt_turns++;
 
-        return true;        
+        return true;
     }
 
-    uint64_t chooseNext() const
+    uint64_t ChooseNext() const
     {
         if (!IsPlayable())
             return 0;
 
-        auto it = FindSmallestInterval();
-
-        if (it->second - it->first + 1 <= 3*coinsPerMove - 2 || playableIntervals.size() > 1)
+        if (MovesLeft() % 2 == 0)
         {
-            return min(it->first + coinsPerMove - 1, it->second - coinsPerMove + 1);
+            auto it = FindLargestInterval();
+            return min(it->first + m_coins_per_move - 1, it->second);
         }
         else
         {
-            // uniform_int_distribution<uint64_t> randomIndex(it->first, it->second - coinsPerMove + 1);
+            // uniform_int_distribution<uint64_t> randomIndex(it->first, it->second - m_coins_per_move + 1);
             // return randomIndex(gen);
+            auto it = FindSmallestInterval();
             return it->first;
         }
     }
 
     bool IsPlayable() const
     {
-        return !playableIntervals.empty();
+        return !m_playable_intervals.empty();
+    }
+
+    uint64_t MovesLeft() const
+    {
+        uint64_t result = 0;
+        for (const auto& ci : m_playable_intervals)
+            result += (ci.second - ci.first) / m_coins_per_move + 1;
+        return result;
     }
 
     bool CheckCoin(uint64_t index) const
     {
-        if (playableIntervals.empty())
+        if (m_playable_intervals.empty())
             return false;
 
-        auto it = playableIntervals.upper_bound(index);
+        auto it = m_playable_intervals.upper_bound(index);
         it--;
 
-        return !(it == playableIntervals.end() || index < it->first || index > it->second);        
+        return !(it == m_playable_intervals.end() || index < it->first || index > it->second + m_coins_per_move - 1);
     }
 
 private:
     map<uint64_t, uint64_t>::const_iterator FindSmallestInterval() const
     {
-        auto result = playableIntervals.end();
+        auto result = m_playable_intervals.end();
         uint64_t minRange = 0;
 
-        for (auto it = playableIntervals.begin(); it != playableIntervals.end(); it++)
+        for (auto it = m_playable_intervals.begin(); it != m_playable_intervals.end(); it++)
         {
             uint64_t range = it->second - it->first + 1;
-            if (result == playableIntervals.end() || range < minRange)
+            if (result == m_playable_intervals.end() || range < minRange)
             {
                 minRange = range;
                 result = it;
@@ -97,12 +105,30 @@ private:
         return result;
     }
 
-private:
-    uint64_t totalCoins;
-    uint64_t coinsPerMove;
+    map<uint64_t, uint64_t>::const_iterator FindLargestInterval() const
+    {
+        auto result = m_playable_intervals.end();
+        uint64_t maxRange = 0;
 
-    map<uint64_t, uint64_t> playableIntervals;
-    uint64_t executedTurns = 0;
+        for (auto it = m_playable_intervals.begin(); it != m_playable_intervals.end(); it++)
+        {
+            uint64_t range = it->second - it->first + 1;
+            if (result == m_playable_intervals.end() || range > maxRange)
+            {
+                maxRange = range;
+                result = it;
+            }
+        }
+
+        return result;
+    }
+
+private:
+    uint64_t m_coins_total;
+    uint64_t m_coins_per_move;
+
+    map<uint64_t, uint64_t> m_playable_intervals;
+    uint64_t m_cnt_turns = 0;
 };
 
 int main()
@@ -122,15 +148,15 @@ int main()
             if (P <= 0)
                 break;
 
-            if (!z.turn((uint64_t) P))
+            if (!z.Turn((uint64_t) P))
                 return -1;
             
-            const uint64_t M = z.chooseNext();
+            const uint64_t M = z.ChooseNext();
             if (M > 0)
             {
                 cout << M << endl;
                 cout.flush();
-                z.turn(M);
+                z.Turn(M);
             }
             else {
                 return -1;
