@@ -48,6 +48,13 @@ public:
         if (!IsPlayable())
             return 0;
 
+//        if (MovesLeft() > 5)
+//        {
+//            auto it = FindLargestInterval();
+//            if (it->second - it->first > m_coins_per_move)
+//                return (it->first + m_coins_per_move + 1);
+//        }
+
         if (MovesLeft() % 2 == 0)
         {
             auto it = FindLargestInterval();
@@ -152,19 +159,14 @@ int main()
                 return -1;
             
             const uint64_t M = z.ChooseNext();
-            if (M > 0)
-            {
-                cout << M << endl;
-                cout.flush();
-                z.Turn(M);
-            }
-            else {
+            if (M == 0 || !z.Turn(M))
                 return -1;
-            }
+            cout << M << endl;
+            cout.flush();
         }
 
         if (P == -1)
-            return -1;
+            break;
         else if (P == -2)
             w++;
         

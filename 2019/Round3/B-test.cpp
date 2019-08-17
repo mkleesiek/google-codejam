@@ -36,7 +36,28 @@ TEST( calc_sum, SmallGeneratedSets )
         for (auto& p : pancakes)
             p = dist(gen);
 
-        calc_sum(pancakes);
+        precalc(pancakes);
+
+        cout << endl;
+        cout.flush();
+    }
+}
+
+TEST( calc_sum, LargeGeneratedSets )
+{
+    for (int t = 0; t < 100; t++) {
+
+        cout << "Testcase: " << t+1 << " ...";
+        cout.flush();
+
+        size_t S = 100'000;
+        vector<uint32_t> pancakes(S, 0);
+
+        uniform_int_distribution<uint32_t> dist(1, 1'000'000'000);
+        for (auto& p : pancakes)
+            p = dist(gen);
+
+        precalc(pancakes);
 
         cout << endl;
         cout.flush();
