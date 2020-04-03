@@ -1,5 +1,5 @@
 project('codejam', 'cpp',
-  version : '0.3.0',
+  version : '0.3.1',
   default_options : [
       'cpp_std=c++14',
       'warning_level=3'
@@ -12,4 +12,4 @@ gtest_dep   = dependency('gtest', main : true, required : false)
 
 inc = include_directories('include')
 
-subdir('2019')
+subdir('2020')
