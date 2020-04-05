@@ -1,7 +1,7 @@
 #include "testing.h"
 #include "utilities.h"
 
-#include "A.cpp"
+#include "C.cpp"
 
 #include <stdexcept>
 
@@ -9,26 +9,30 @@ using namespace std;
 
 TEST( Main, Basic )
 {
-    string input = R"(3
-4
-1 2 3 4
-2 1 4 3
-3 4 1 2
-4 3 2 1
-4
-2 2 2 2
-2 3 2 3
-2 2 2 3
-2 2 2 2
+    string input = R"(4
 3
-2 1 3
-1 3 2
-1 2 3
+360 480
+420 540
+600 660
+3
+0 1440
+1 3
+2 4
+5
+99 150
+1 100
+100 301
+2 5
+150 250
+2
+0 720
+720 1440
 )";
 
-    string expectation = R"(Case #1: 4 0 0
-Case #2: 9 4 4
-Case #3: 8 0 2
+    string expectation = R"(Case #1: CJC
+Case #2: IMPOSSIBLE
+Case #3: JCCJJ
+Case #4: CC
 )";
 
     PROVIDE_INPUT(input);
