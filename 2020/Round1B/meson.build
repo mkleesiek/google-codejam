@@ -1,5 +1,5 @@
 # prepare and build executables
-foreach appname : ['A', 'B', 'C', 'D']
+foreach appname : ['A', 'B', 'C']
     exe = executable(appname, appname + '.cpp',
         include_directories : inc,
         install : true,
@@ -9,7 +9,7 @@ endforeach
 
 # compile unit tests
 if gtest_dep.found()
-    foreach testname : ['A-test', 'B-test', 'C-test', 'D-test']
+    foreach testname : ['A-test', 'B-test', 'C-test']
         exe = executable(testname, testname + '.cpp',
             include_directories : inc,
             dependencies : [gtest_dep]

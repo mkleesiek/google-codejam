@@ -7,10 +7,21 @@ using namespace std;
 
 TEST( Main, Basic )
 {
-    string input = R"(0
+    string input = R"(3
+2 2
+3 2
+2 3
 )";
 
-    string expectation = R"()";
+    string expectation = R"(Case #1: 1
+2 1
+Case #2: 2
+3 2
+2 1
+Case #3: 2
+2 3
+2 2
+)";
 
     ASSERT_EQ(execute_main(test, input), 0);
 
