@@ -7,11 +7,16 @@
 #define main(...) test(__VA_ARGS__)
 //undef main
 
-#define PROVIDE_INPUT(input) \
-    std::istringstream in(input); \
-    cin.rdbuf(in.rdbuf()); \
+template<typename F>
+int execute_main(F& f, const std::string& input)
+{
+	std::istringstream in(input);
+    std::cin.rdbuf(in.rdbuf());
     testing::internal::CaptureStdout();
+    return f();
+}
 
-#define CAPTURE_OUTPUT(output) \
-    std::string output = testing::internal::GetCapturedStdout();
-    
+std::string capture_output()
+{
+	return testing::internal::GetCapturedStdout();
+}

@@ -33,9 +33,8 @@ Case #3: (111)000
 Case #4: (1)
 )";
 
-    PROVIDE_INPUT(input);
-    ASSERT_EQ(test(), 0);
-    CAPTURE_OUTPUT(output);
+    ASSERT_EQ(execute_main(test, input), 0);
 
+    string output = capture_output();
     ASSERT_EQ(output, expectation);
 }

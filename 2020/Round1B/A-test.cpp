@@ -3,33 +3,14 @@
 
 #include "A.cpp"
 
-#include <stdexcept>
-
 using namespace std;
 
 TEST( Main, Basic )
 {
-    string input = R"(3
-4
-1 2 3 4
-2 1 4 3
-3 4 1 2
-4 3 2 1
-4
-2 2 2 2
-2 3 2 3
-2 2 2 3
-2 2 2 2
-3
-2 1 3
-1 3 2
-1 2 3
+    string input = R"(0
 )";
 
-    string expectation = R"(Case #1: 4 0 0
-Case #2: 9 4 4
-Case #3: 8 0 2
-)";
+    string expectation = R"()";
 
     ASSERT_EQ(execute_main(test, input), 0);
 

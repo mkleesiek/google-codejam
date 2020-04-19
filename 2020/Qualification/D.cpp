@@ -18,37 +18,38 @@ class Game {
 public:
 	Game(size_t n_bits)
 	: m_array(n_bits, -1)
-	, m_backup()
+	, m_probe(n_bits, -1)
 	, c_queries{0}
+	, probing{false}
 	{
 	}
 
 	size_t next_guess()
 	{
-		const size_t B = m_array.size();
-
-		if ((c_queries > 0 && c_queries % 10 == 0) || m_backup.size() > 0)
+		if (c_queries >= 10 && c_queries % 10 < 2)
 		{
 			size_t e_pos = find_equal_bits();
 			size_t d_pos = find_differing_bits();
 
-			if (e_pos < B) {
-				if (m_array[e_pos] == -1)
+			if (e_pos < B()) {
+				if (m_probe[e_pos] == -1)
 					return e_pos;
 			}
 
-			if (d_pos < B) {
-				if (m_array[d_pos] == -1)
+			if (d_pos < B()) {
+				if (m_probe[d_pos] == -1)
 					return d_pos;
 			}
+
+			return 0;
 		}
 		else {
-			for (size_t i = 0; i < B; i++)
+			for (size_t i = 0; i < (B()+1)/2; i++)
 			{
 				if (m_array[i] == -1)
 					return i;
-				else if (m_array[B-i-1] == -1)
-					return B-i-1;
+				else if (m_array[B()-i-1] == -1)
+					return B()-i-1;
 			}
 		}
 
@@ -63,15 +64,16 @@ public:
 
 		if (c_queries > 0 && c_queries % 10 == 0)
 		{
-			m_backup = m_array;
-			m_array.assign(B, -1);
+			probing = true;
 		}
 
 		c_queries++;
-		m_array[pos] = next_bit;
 
-		if (m_backup.size() > 0) {
-			const size_t iteration = c_queries / 10;
+		if (!probing) {
+			m_array[pos] = next_bit;
+		}
+		else {
+			m_probe[pos] = next_bit;
 
 			size_t e_pos = find_equal_bits();
 			size_t d_pos = find_differing_bits();
@@ -79,20 +81,20 @@ public:
 			int e = Unknown;
 
 			if (e_pos < B) {
-				if (m_array[e_pos] == -1)
+				if (m_probe[e_pos] == -1)
 					return;
 
-				if (m_array[e_pos] == m_backup[e_pos])
+				if (m_probe[e_pos] == m_array[e_pos])
 					e &= (None | Reverse);
 				else
 					e &= (Complement | Both);
 			}
 
 			if (d_pos < B) {
-				if (m_array[d_pos] == -1)
+				if (m_probe[d_pos] == -1)
 					return;
 
-				if (m_array[d_pos] == m_backup[d_pos])
+				if (m_probe[d_pos] == m_array[d_pos])
 					e &= (None | Both);
 				else
 					e &= (Complement | Reverse);
@@ -100,11 +102,11 @@ public:
 
 //			cerr << "C: " << c_queries << endl;
 //			cerr << "Array:  " << get_solution() << endl;
-//			cerr << "Backup: " << get_backup() << endl;
+//			cerr << "Probe:  " << get_probe() << endl;
 //			cerr << bitset<8>(e) << endl;
 
-			m_array = m_backup;
-			m_backup.clear();
+			m_probe.assign(m_array.size(), -1);
+			probing = false;
 
 			if ((e & Both) != 0) {
 				complement();
@@ -139,13 +141,18 @@ public:
 	}
 
 private:
-	string get_backup() const
+	size_t B() const
 	{
-		string result(m_backup.size(), '-');
-		for (size_t i = 0; i < m_backup.size(); i++) {
-			if (m_backup[i] == 1)
+		return m_array.size();
+	}
+
+	string get_probe() const
+	{
+		string result(m_probe.size(), '-');
+		for (size_t i = 0; i < m_probe.size(); i++) {
+			if (m_probe[i] == 1)
 				result[i] = '1';
-			else if (m_backup[i] == 0)
+			else if (m_probe[i] == 0)
 				result[i] = '0';
 		}
 		return result;
@@ -153,28 +160,24 @@ private:
 
 	size_t find_equal_bits() const
 	{
-		const size_t B = m_backup.size();
-
-		for (size_t i = 0; i < B; i++)
+		for (size_t i = 0; i < B(); i++)
 		{
-			if (m_backup[i] != -1 && m_backup[i] == m_backup[B-i-1])
+			if (m_array[i] != -1 && m_array[i] == m_array[B()-i-1])
 				return i;
 		}
 
-		return B;
+		return B();
 	}
 
 	size_t find_differing_bits() const
 	{
-		const size_t B = m_backup.size();
-
-		for (size_t i = 0; i < B; i++)
+		for (size_t i = 0; i < B(); i++)
 		{
-			if (m_backup[i] + m_backup[B-i-1] == 1)
+			if (m_array[i] + m_array[B()-i-1] == 1)
 				return i;
 		}
 
-		return B;
+		return B();
 	}
 
 	void reverse()
@@ -195,8 +198,9 @@ private:
 	}
 
 	vector<int8_t> m_array;
-	vector<int8_t> m_backup;
+	vector<int8_t> m_probe;
 	size_t c_queries;
+	bool probing;
 };
 
 int main()
