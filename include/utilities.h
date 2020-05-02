@@ -11,3 +11,9 @@ bool isPrime(T number)
 
     return true;
 }
+
+template<class T>
+T powi(T base, T exp)
+{
+	return (exp <= 0) ? 1 : base * powi(base, exp-1);
+}
