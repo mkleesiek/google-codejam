@@ -7,16 +7,17 @@
 #define main(...) test(__VA_ARGS__)
 //undef main
 
-template<typename F>
-int execute_main(F& f, const std::string& input)
-{
-	std::istringstream in(input);
-    std::cin.rdbuf(in.rdbuf());
-    testing::internal::CaptureStdout();
-    return f();
+#define ASSERT_MAIN_RETURNS(input, output) \
+{ \
+	std::istringstream in(input); \
+    std::cin.rdbuf(in.rdbuf()); \
+    testing::internal::CaptureStdout(); \
+    const int return_value = main(); \
+    ASSERT_EQ(return_value, output); \
 }
 
-std::string capture_output()
-{
-	return testing::internal::GetCapturedStdout();
+#define ASSERT_OUTPUT_EQ(expected) \
+{ \
+    const string output = testing::internal::GetCapturedStdout(); \
+    ASSERT_EQ(output, expected); \
 }

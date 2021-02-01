@@ -30,10 +30,8 @@ Case #4: 1
 Case #5: 5
 )";
 
-    ASSERT_EQ(execute_main(test, input), 0);
-
-    string output = capture_output();
-    ASSERT_EQ(output, expectation);
+    ASSERT_MAIN_RETURNS(input, 0);
+    ASSERT_OUTPUT_EQ(expectation);
 }
 
 TEST( Main, Advanced )
@@ -47,8 +45,6 @@ TEST( Main, Advanced )
 Case #2: 4
 )";
 
-    ASSERT_EQ(execute_main(test, input), 0);
-
-    string output = capture_output();
-    ASSERT_EQ(output, expectation);
+    ASSERT_MAIN_RETURNS(input, 0);
+    ASSERT_OUTPUT_EQ(expectation);
 }

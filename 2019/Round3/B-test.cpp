@@ -69,10 +69,8 @@ TEST( Main, Basic )
     string input = R"(0)";
     string expectation = R"()";
 
-    PROVIDE_INPUT(input);
-    ASSERT_EQ(test(), 0);
-    CAPTURE_OUTPUT(output);
-    ASSERT_EQ(output, expectation);
+    ASSERT_MAIN_RETURNS(input, 0);
+    ASSERT_OUTPUT_EQ(expectation);
 }
 
 TEST( Main, Examples )
@@ -90,8 +88,6 @@ Case #2: 16
 Case #3: 999999991
 )";
 
-    PROVIDE_INPUT(input);
-    ASSERT_EQ(test(), 0);
-    CAPTURE_OUTPUT(output);
-    ASSERT_EQ(output, expectation);
+    ASSERT_MAIN_RETURNS(input, 0);
+    ASSERT_OUTPUT_EQ(expectation);
 }

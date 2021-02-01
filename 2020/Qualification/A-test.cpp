@@ -31,8 +31,6 @@ Case #2: 9 4 4
 Case #3: 8 0 2
 )";
 
-    ASSERT_EQ(execute_main(test, input), 0);
-
-    string output = capture_output();
-    ASSERT_EQ(output, expectation);
+    ASSERT_MAIN_RETURNS(input, 0);
+    ASSERT_OUTPUT_EQ(expectation);
 }

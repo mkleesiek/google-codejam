@@ -71,9 +71,6 @@ TEST( Main, Basic )
 
     string expectation = R"()";
 
-    PROVIDE_INPUT(input);
-    ASSERT_EQ(test(), 0);
-    CAPTURE_OUTPUT(output);
-
-    ASSERT_EQ(output, expectation);
+    ASSERT_MAIN_RETURNS(input, 0);
+    ASSERT_OUTPUT_EQ(expectation);
 }

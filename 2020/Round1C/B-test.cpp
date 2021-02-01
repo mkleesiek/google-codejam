@@ -10030,16 +10030,9 @@ TEST( Main, Basic )
     string expectation = R"(Case #1: TPFOXLUSHB
 )";
 
-    ASSERT_EQ(execute_main(test, input), 0);
-
-    string output = capture_output();
-    ASSERT_EQ(output, expectation);
+    ASSERT_MAIN_RETURNS(input, 0);
+    ASSERT_OUTPUT_EQ(expectation);
 }
-
-
-
-    string expectation = R"(Case #1: TPFOXLUSHB
-)";
 
 TEST( Main, Randomized )
 {
@@ -10089,10 +10082,8 @@ TEST( Main, Randomized )
 			expectation << "Case #" << (t+1) << ": " << D << endl;
 		}
 
-		ASSERT_EQ(execute_main(test, input.str()), 0);
-
-		string output = capture_output();
-		ASSERT_EQ(output, expectation.str());
+        ASSERT_MAIN_RETURNS(input.str(), 0);
+        ASSERT_OUTPUT_EQ(expectation.str());
 
 	}
 }

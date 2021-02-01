@@ -43,7 +43,7 @@ vector<T> encrypt(const string& text)
         size_t index1 = text[i] - 'A';
         size_t index2 = text[i+1] - 'A';
 
-        if (index1 < 0 || index1 > 25 || index2 < 0 || index2 > 25)
+        if (index1 > 25 || index2 > 25)
             throw new invalid_argument("Input text contains invalid chars.");
         
         cipher[i] = primeNumbers[index1] * primeNumbers[index2];
@@ -123,9 +123,6 @@ TEST( Main, Basic )
 Case #2: SUBDERMATOGLYPHICFJKNQVWXZ
 )";
 
-    PROVIDE_INPUT(input);
-    ASSERT_EQ(test(), 0);
-    CAPTURE_OUTPUT(output);
-
-    ASSERT_EQ(output, expectation);
+    ASSERT_MAIN_RETURNS(input, 0);
+    ASSERT_OUTPUT_EQ(expectation);
 }

@@ -12,4 +12,5 @@ gtest_dep   = dependency('gtest', main : true, required : false)
 
 inc = include_directories('include')
 
+subdir('2019')
 subdir('2020')

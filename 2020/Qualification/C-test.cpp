@@ -35,8 +35,6 @@ Case #3: JCCJJ
 Case #4: CC
 )";
 
-    ASSERT_EQ(execute_main(test, input), 0);
-
-    string output = capture_output();
-    ASSERT_EQ(output, expectation);
+    ASSERT_MAIN_RETURNS(input, 0);
+    ASSERT_OUTPUT_EQ(expectation);
 }
