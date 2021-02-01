@@ -1,4 +1,8 @@
-/build-debug
-/build-release
-/.idea
-
+.idea
+.vscode
+build
+build-debug
+**/A
+**/B
+**/C
+**/D

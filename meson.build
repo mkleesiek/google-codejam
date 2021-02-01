@@ -14,3 +14,4 @@ inc = include_directories('include')
 
 subdir('2019')
 subdir('2020')
+subdir('template')
