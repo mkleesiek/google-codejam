@@ -5,8 +5,7 @@
 
 using namespace std;
 
-TEST( msb, Basic )
-{
+TEST( Round_2020_1B_A, MSB ){
 	ASSERT_EQ(msb(1), 0);
 	ASSERT_EQ(msb(-1), 0);
 	ASSERT_EQ(msb(2), 1);
@@ -15,8 +14,7 @@ TEST( msb, Basic )
 	ASSERT_EQ(msb(-8), 3);
 }
 
-TEST( solve, Basic )
-{
+TEST( Round_2020_1B_A, Basic ){
 	string r{};
 
 	r = {};
@@ -80,8 +78,7 @@ TEST( solve, Basic )
 	ASSERT_EQ(r, "S");
 }
 
-TEST( Main, Basic )
-{
+TEST( Round_2020_1B_A, Main ){
     string input = R"(4
 2 3
 -2 -3

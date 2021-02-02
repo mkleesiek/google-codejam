@@ -5,13 +5,11 @@
 
 using namespace std;
 
-TEST( Main, Basic )
+TEST( Round_X_A, Main )
 {
-    string input = R"(
-)";
+    string input = R"()";
 
-    string expectation = R"(
-)";
+    string expectation = R"()";
 
     ASSERT_MAIN_RETURNS(input, 0);
     ASSERT_OUTPUT_EQ(expectation);

@@ -5,8 +5,7 @@
 
 using namespace std;
 
-TEST( Main, Basic )
-{
+TEST( Round_2020_1B_B, Main ){
     string input = R"(0
 )";
 
