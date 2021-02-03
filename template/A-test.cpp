@@ -1,5 +1,5 @@
 #include "testing.h"
-#include "utilities.h"
+#include <string>
 
 #include "A.cpp"
 
