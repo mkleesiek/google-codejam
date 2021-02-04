@@ -5,11 +5,10 @@
 #define GTEST
 
 #define main(...) test(__VA_ARGS__)
-//undef main
 
 #define ASSERT_MAIN_RETURNS(input, output) \
 { \
-	std::istringstream in(input); \
+    std::istringstream in(input); \
     std::cin.rdbuf(in.rdbuf()); \
     testing::internal::CaptureStdout(); \
     const int return_value = main(); \
