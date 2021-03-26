@@ -20,5 +20,7 @@ inc = include_directories('include')
 # subdir('2020/Round1B')
 # subdir('2020/Round1C')
 
+subdir('2021/Qualification')
+
 # template for upcoming competitions
-subdir('template')
+# subdir('template')
